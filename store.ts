@@ -1,11 +1,14 @@
 import { configureStore } from '@reduxjs/toolkit'
-import { apiSlice } from './services/characters'
-
+import { characterApiSlice } from './services/characters'
+import themeReducer from './features/themeSlice'
 export const store = configureStore({
   reducer: {
     // Add your reducers here
-    [apiSlice.reducerPath]: apiSlice.reducer,
+    //sync
+    theme: themeReducer,
+    //Async
+    [characterApiSlice.reducerPath]: characterApiSlice.reducer,
   },
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(apiSlice.middleware),
+    getDefaultMiddleware().concat(characterApiSlice.middleware),
 })

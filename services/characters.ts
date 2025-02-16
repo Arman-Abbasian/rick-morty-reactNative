@@ -1,8 +1,9 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 
-export const apiSlice = createApi({
+export const characterApiSlice = createApi({
   reducerPath: 'api',
   baseQuery: fetchBaseQuery({ baseUrl: 'https://rickandmortyapi.com/api/' }),
+  //Read
   endpoints: (builder) => ({
     GetAllCharacters: builder.query({
       query: () => 'character',
@@ -10,4 +11,4 @@ export const apiSlice = createApi({
   }),
 })
 
-export const { useGetAllCharactersQuery } = apiSlice
+export const { useGetAllCharactersQuery } = characterApiSlice
