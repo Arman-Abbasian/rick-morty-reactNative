@@ -1,8 +1,9 @@
-// store/slices/themeSlice.js
 import { createSlice } from '@reduxjs/toolkit'
+import { Appearance } from 'react-native'
 
+const systemTheme = Appearance.getColorScheme()
 const initialState = {
-  theme: 'light',
+  theme: systemTheme || 'light',
 }
 
 const themeSlice = createSlice({

@@ -1,7 +1,7 @@
 import { useGetAllCharactersQuery } from '@/services/characters'
 import { View, Image, FlatList, Text, StyleSheet } from 'react-native'
 
-export default function TabTwoScreen() {
+export default function Characters() {
   const { data: GetAllCharacters, isLoading: GetAllCharactersLoading } =
     useGetAllCharactersQuery({})
 
