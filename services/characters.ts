@@ -8,7 +8,11 @@ export const characterApiSlice = createApi({
     GetAllCharacters: builder.query({
       query: () => 'character',
     }),
+    GetCharacter: builder.query({
+      query: (id) => `character/${id}`,
+    }),
   }),
 })
 
-export const { useGetAllCharactersQuery } = characterApiSlice
+export const { useGetAllCharactersQuery, useGetCharacterQuery } =
+  characterApiSlice

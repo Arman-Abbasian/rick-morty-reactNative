@@ -4,15 +4,16 @@ import { View, Image, FlatList, Text, StyleSheet } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { useSelector } from 'react-redux'
 import { RootState } from '@/store'
+import { Link } from 'expo-router'
 
 const themeColors = {
   light: {
-    backgroundColor: '#ffffff', // Light mode background color
-    textColor: '#000000', // Light mode text color
+    backgroundColor: '#CBD5E1', // Light mode background color
+    textColor: '#334155', // Light mode text color
   },
   dark: {
-    backgroundColor: '#121212', // Dark mode background color
-    textColor: '#ffffff', // Dark mode text color
+    backgroundColor: '#334155', // Dark mode background color
+    textColor: '#F1F5F9', // Dark mode text color
   },
 }
 
@@ -29,13 +30,15 @@ export default function Characters() {
         keyExtractor={(item) => item.id.toString()}
         style={styles.listContainer}
         renderItem={({ item }) => (
-          <View
+          <Link
+            href={`/character/${item.id}`}
             style={[
               styles.itemContainer,
               { backgroundColor: themeColors[theme].backgroundColor },
             ]}
           >
             <Image source={{ uri: item.image }} style={styles.image} />
+
             <View style={styles.textContainer}>
               <View
                 style={{
@@ -45,7 +48,11 @@ export default function Characters() {
                   marginBottom: 8,
                 }}
               >
-                <IconSymbol size={20} name="person" color="black" />
+                <IconSymbol
+                  size={20}
+                  name="person"
+                  color={themeColors[theme].textColor}
+                />
                 <Text
                   style={[styles.text, { color: themeColors[theme].textColor }]}
                 >
@@ -61,7 +68,11 @@ export default function Characters() {
                   marginBottom: 8,
                 }}
               >
-                <IconSymbol size={20} name="category" color="black" />
+                <IconSymbol
+                  size={20}
+                  name="category"
+                  color={themeColors[theme].textColor}
+                />
                 <Text
                   style={[styles.text, { color: themeColors[theme].textColor }]}
                 >
@@ -77,7 +88,11 @@ export default function Characters() {
                   marginBottom: 8,
                 }}
               >
-                <IconSymbol size={20} name="transgender" color="black" />
+                <IconSymbol
+                  size={20}
+                  name="transgender"
+                  color={themeColors[theme].textColor}
+                />
                 <Text
                   style={[styles.text, { color: themeColors[theme].textColor }]}
                 >
@@ -91,7 +106,7 @@ export default function Characters() {
                 color={item.status === 'Alive' ? 'green' : 'red'}
               />
             </View>
-          </View>
+          </Link>
         )}
       />
     </SafeAreaView>
@@ -118,10 +133,11 @@ const styles = StyleSheet.create({
     height: '100%',
     borderRadius: 5,
     flex: 2,
+    width: '40%',
   },
   textContainer: {
     display: 'flex',
-
+    width: '50%',
     flex: 3,
   },
   text: {
