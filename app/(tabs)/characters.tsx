@@ -1,5 +1,5 @@
 import { IconSymbol } from '@/components/ui/IconSymbol'
-import { useGetAllCharactersQuery } from '@/services/characters'
+import { useGetAllCharactersQuery } from '@/services/character'
 import { View, Image, FlatList, Text, StyleSheet } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { useSelector } from 'react-redux'

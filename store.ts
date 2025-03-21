@@ -1,18 +1,24 @@
 import { configureStore } from '@reduxjs/toolkit'
-import { characterApiSlice } from './services/characters'
+import { characterApiSlice } from './services/character'
+import { episodeApiSlice } from './services/episode'
 import themeReducer from './features/themeSlice'
+
+// پیکربندی استور
 export const store = configureStore({
   reducer: {
-    // Add your reducers here
-    //sync
+    // ریدوسرهای همگام
     theme: themeReducer,
-    //Async
+
+    // ریدوسرهای ناهمگام مربوط به API‌ها
     [characterApiSlice.reducerPath]: characterApiSlice.reducer,
+    [episodeApiSlice.reducerPath]: episodeApiSlice.reducer, // اضافه کردن reducer مربوط به episodeApiSlice
   },
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(characterApiSlice.middleware),
+    getDefaultMiddleware()
+      .concat(characterApiSlice.middleware)
+      .concat(episodeApiSlice.middleware), // اضافه کردن middleware برای هماهنگی با API
 })
 
-// Infer the `RootState` type from the store itself
-export type RootState = ReturnType<typeof store.getState>
-export type AppDispatch = typeof store.dispatch
+// تعریف انواع استور
+export type RootState = ReturnType<typeof store.getState> // نوع وضعیت اصلی
+export type AppDispatch = typeof store.dispatch // نوع dispatch
