@@ -5,10 +5,14 @@ export const episodeApiSlice = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: 'https://rickandmortyapi.com/api/' }),
   //Read
   endpoints: (builder) => ({
+    GetAllEpisodes: builder.query({
+      query: () => `episode`,
+    }),
     GetMultipleEpisodes: builder.query({
       query: (episodes) => `episode/${episodes}`,
     }),
   }),
 })
 
-export const { useGetMultipleEpisodesQuery } = episodeApiSlice
+export const { useGetAllEpisodesQuery, useGetMultipleEpisodesQuery } =
+  episodeApiSlice
