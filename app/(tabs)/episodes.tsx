@@ -1,12 +1,10 @@
 import { IconSymbol } from '@/components/ui/IconSymbol'
-import { useGetAllCharactersQuery } from '@/services/character'
 import { View, Image, FlatList, Text, StyleSheet } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { useSelector } from 'react-redux'
 import { RootState } from '@/store'
 import { Link } from 'expo-router'
 import { useGetAllEpisodesQuery } from '@/services/episode'
-import { Episode } from '@/constants/types'
 
 const themeColors = {
   light: {
@@ -23,22 +21,32 @@ export default function Characters() {
   const theme = useSelector((state: RootState) => state.theme.theme)
 
   const { data: GetAllEpisodes, isLoading: GetAllEpisodesLoading } =
-    useGetAllEpisodesQuery({})
+    useGetAllEpisodesQuery()
 
   return (
     <SafeAreaView style={styles.safeArea}>
       <FlatList
-        data={GetAllEpisodes?.results as Episode[]}
+        data={GetAllEpisodes?.results}
         keyExtractor={(item) => item.id.toString()}
         style={styles.listContainer}
         renderItem={({ item }) => (
-          <Link
-            href={`/episode/${item.id}`}
+          // <Link
+          //   href={`/episode/${item.id}`}
+          //   style={{ display: 'flex', width: 'auto' }}
+          // >
+          <View
             style={[
               styles.itemContainer,
               { backgroundColor: themeColors[theme].backgroundColor },
             ]}
           >
+            <View style={{ flex: 1 }}>
+              <Image
+                source={require('../../assets/images/episode.png')}
+                style={styles.episodeImage}
+                resizeMode="contain"
+              />
+            </View>
             <View style={styles.textContainer}>
               <View
                 style={{
@@ -100,10 +108,11 @@ export default function Characters() {
                 </Text>
               </View>
             </View>
-            <View>characters</View>
-          </Link>
+          </View>
+          // </Link>
         )}
       />
+      <View></View>
     </SafeAreaView>
   )
 }
@@ -115,14 +124,18 @@ const styles = StyleSheet.create({
   listContainer: {
     paddingHorizontal: 20,
     paddingVertical: 10,
+    width: '100%',
   },
   itemContainer: {
-    flexDirection: 'row',
+    flexDirection: 'row', // قرار دادن آیتم‌ها کنار هم
+    alignItems: 'center', // تراز عمودی آیتم‌ها
+    justifyContent: 'flex-start', // شروع آیتم‌ها از سمت چپ
     padding: 8,
     borderRadius: 5,
-    height: 130,
+    height: 120,
     marginBottom: 10,
-    gap: 10,
+    backgroundColor: '#f9f9f9', // رنگ پس‌زمینه برای تست ظاهر
+    gap: 10, // فاصله بین آیتم‌ها
   },
   image: {
     height: '100%',
@@ -133,11 +146,15 @@ const styles = StyleSheet.create({
   textContainer: {
     display: 'flex',
     width: '50%',
-    flex: 3,
+    flex: 2,
   },
   text: {
     fontSize: 14,
     fontWeight: 'bold',
     color: 'white',
+  },
+  episodeImage: {
+    width: '100%',
+    marginRight: 10,
   },
 })

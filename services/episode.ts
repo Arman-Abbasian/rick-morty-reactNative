@@ -1,3 +1,4 @@
+import { EpisodeResponse } from '@/constants/types'
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 
 export const episodeApiSlice = createApi({
@@ -5,7 +6,7 @@ export const episodeApiSlice = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: 'https://rickandmortyapi.com/api/' }),
   //Read
   endpoints: (builder) => ({
-    GetAllEpisodes: builder.query({
+    GetAllEpisodes: builder.query<EpisodeResponse, void>({
       query: () => `episode`,
     }),
     GetMultipleEpisodes: builder.query({

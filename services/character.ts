@@ -8,11 +8,17 @@ export const characterApiSlice = createApi({
     GetAllCharacters: builder.query({
       query: () => 'character',
     }),
+    GetMultipleCharacters: builder.query({
+      query: (episodes) => `episode/${episodes}`,
+    }),
     GetCharacter: builder.query({
       query: (id) => `character/${id}`,
     }),
   }),
 })
 
-export const { useGetAllCharactersQuery, useGetCharacterQuery } =
-  characterApiSlice
+export const {
+  useGetAllCharactersQuery,
+  useGetMultipleCharactersQuery,
+  useGetCharacterQuery,
+} = characterApiSlice
