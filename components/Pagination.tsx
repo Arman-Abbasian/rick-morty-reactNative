@@ -1,23 +1,35 @@
-import { View, StyleSheet, FlatList } from 'react-native'
-import { Link } from 'expo-router'
+import { View, StyleSheet, FlatList, TouchableOpacity } from 'react-native'
 import { Info } from '@/constants/types'
 
 type PaginationProps = {
-  info: Info // Define 'number' as a prop of type 'number'
+  info: Info
+  getPaginatedEpisode: (number: number) => void
+  pageNumber: number
 }
 type PageNumberProps = {
-  number: number // Define 'number' as a prop of type 'number'
+  number: number
+  getPaginatedEpisode: (number: number) => void
+  pageNumber: number
 }
 
 export default function Pagination(props: PaginationProps) {
-  const { info } = props
+  const { info, getPaginatedEpisode, pageNumber } = props
 
   return (
     <View style={styles.paginationContainer}>
       <FlatList
-        data={Array.from({ length: info.pages }, (_, i) => i + 1)}
+        data={Array.from(
+          { length: info.pages > 5 ? 5 : info.pages },
+          (_, i) => i + 1
+        )}
         keyExtractor={(item) => item.toString()}
-        renderItem={({ item }) => <PageNumber number={item} />}
+        renderItem={({ item }) => (
+          <PageNumber
+            number={item}
+            getPaginatedEpisode={getPaginatedEpisode}
+            pageNumber={pageNumber}
+          />
+        )}
         horizontal={true}
         style={styles.paginationContainer}
       />
@@ -26,13 +38,17 @@ export default function Pagination(props: PaginationProps) {
 }
 
 function PageNumber(props: PageNumberProps) {
-  const { number } = props
+  const { number, getPaginatedEpisode, pageNumber } = props
   return (
-    <View style={styles.pageNumberContainer}>
-      <Link href={`https://rickandmortyapi.com/api/episode?page=${number}`}>
-        {number}
-      </Link>
-    </View>
+    <TouchableOpacity
+      style={[
+        styles.pageNumberContainer, // استایل پایه
+        number === pageNumber && { backgroundColor: 'cyan' }, // استایل شرطی
+      ]}
+      onPress={() => getPaginatedEpisode(number)}
+    >
+      {number}
+    </TouchableOpacity>
   )
 }
 

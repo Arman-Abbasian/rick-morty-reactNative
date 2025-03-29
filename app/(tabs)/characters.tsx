@@ -1,10 +1,16 @@
 import { IconSymbol } from '@/components/ui/IconSymbol'
-import { useGetAllCharactersQuery } from '@/services/character'
+import {
+  useGetAllCharactersQuery,
+  useLazyGetPaginatedCharactersQuery,
+} from '@/services/character'
 import { View, Image, FlatList, Text, StyleSheet } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { useSelector } from 'react-redux'
 import { RootState } from '@/store'
 import { Link } from 'expo-router'
+import Pagination from '@/components/Pagination'
+import { useState } from 'react'
+import { Character, Info } from '@/constants/types'
 
 const themeColors = {
   light: {
@@ -20,13 +26,34 @@ const themeColors = {
 export default function Characters() {
   const theme = useSelector((state: RootState) => state.theme.theme)
 
-  const { data: GetAllCharacters, isLoading: GetAllCharactersLoading } =
-    useGetAllCharactersQuery({})
+  const [pageNumber, setPageNumber] = useState<number>(1)
+  const [characterList, setCharacterList] = useState<Character[] | null>(null)
 
+  const { data: GetAllCharacters, isLoading: GetAllCharactersLoading } =
+    useGetAllCharactersQuery()
+  const [
+    LazyGetPaginatedCharactersTrigger,
+    {
+      data: LazyGetPaginatedCharacters,
+      isLoading: LazyGetPaginatedCharactersLoading,
+    },
+  ] = useLazyGetPaginatedCharactersQuery()
+  const getPaginatedEpisodeHandler = async (number: number) => {
+    try {
+      const newUrl = new URL(window.location.href)
+      newUrl.searchParams.set('page', number.toString())
+      window.history.pushState({}, '', newUrl.toString())
+      setPageNumber(number)
+      const data = await LazyGetPaginatedCharactersTrigger(number)
+      setCharacterList(data?.data?.results as Character[])
+    } catch (error) {
+      console.log(error)
+    }
+  }
   return (
     <SafeAreaView style={styles.safeArea}>
       <FlatList
-        data={GetAllCharacters?.results}
+        data={characterList ? characterList : GetAllCharacters?.results}
         keyExtractor={(item) => item.id.toString()}
         style={styles.listContainer}
         renderItem={({ item }) => (
@@ -109,6 +136,15 @@ export default function Characters() {
           </Link>
         )}
       />
+      {GetAllCharacters?.info && (
+        <View>
+          <Pagination
+            info={GetAllCharacters?.info as Info}
+            getPaginatedEpisode={getPaginatedEpisodeHandler}
+            pageNumber={pageNumber}
+          />
+        </View>
+      )}
     </SafeAreaView>
   )
 }

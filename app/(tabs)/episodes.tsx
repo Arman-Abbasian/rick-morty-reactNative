@@ -3,10 +3,14 @@ import { View, Image, FlatList, Text, StyleSheet } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { useSelector } from 'react-redux'
 import { RootState } from '@/store'
-import { Link } from 'expo-router'
-import { useGetAllEpisodesQuery } from '@/services/episode'
+import { useNavigation } from '@react-navigation/native'
+import {
+  useGetAllEpisodesQuery,
+  useLazyGetPaginatedEpisodesQuery,
+} from '@/services/episode'
 import Pagination from '@/components/Pagination'
-import { Info } from '@/constants/types'
+import { Episode, Info } from '@/constants/types'
+import { useState } from 'react'
 
 const themeColors = {
   light: {
@@ -21,14 +25,37 @@ const themeColors = {
 
 export default function Characters() {
   const theme = useSelector((state: RootState) => state.theme.theme)
+  const navigation = useNavigation()
+
+  const [pageNumber, setPageNumber] = useState<number>(1)
+  const [episodeList, setEpisodeList] = useState<Episode[] | null>(null)
 
   const { data: GetAllEpisodes, isLoading: GetAllEpisodesLoading } =
     useGetAllEpisodesQuery()
+  const [
+    LazyGetPaginatedEpisodesTrigger,
+    {
+      data: LazyGetPaginatedEpisodes,
+      isLoading: LazyGetPaginatedEpisodesLoading,
+    },
+  ] = useLazyGetPaginatedEpisodesQuery()
 
+  const getPaginatedEpisodeHandler = async (number: number) => {
+    try {
+      const newUrl = new URL(window.location.href)
+      newUrl.searchParams.set('page', number.toString())
+      window.history.pushState({}, '', newUrl.toString())
+      setPageNumber(number)
+      const data = await LazyGetPaginatedEpisodesTrigger(number)
+      setEpisodeList(data?.data?.results as Episode[])
+    } catch (error) {
+      console.log(error)
+    }
+  }
   return (
     <SafeAreaView style={styles.safeArea}>
       <FlatList
-        data={GetAllEpisodes?.results}
+        data={episodeList ? episodeList : GetAllEpisodes?.results}
         keyExtractor={(item) => item.id.toString()}
         style={styles.listContainer}
         renderItem={({ item }) => (
@@ -116,7 +143,11 @@ export default function Characters() {
       />
       {GetAllEpisodes?.info && (
         <View>
-          <Pagination info={GetAllEpisodes?.info as Info} />
+          <Pagination
+            info={GetAllEpisodes?.info as Info}
+            getPaginatedEpisode={getPaginatedEpisodeHandler}
+            pageNumber={pageNumber}
+          />
         </View>
       )}
     </SafeAreaView>

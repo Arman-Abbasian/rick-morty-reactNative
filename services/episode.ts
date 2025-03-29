@@ -9,11 +9,17 @@ export const episodeApiSlice = createApi({
     GetAllEpisodes: builder.query<EpisodeResponse, void>({
       query: () => `episode`,
     }),
-    GetMultipleEpisodes: builder.query({
+    GetMultipleEpisodes: builder.query<EpisodeResponse, void>({
       query: (episodes) => `episode/${episodes}`,
+    }),
+    GetPaginatedEpisodes: builder.query<EpisodeResponse, number>({
+      query: (page: number) => `episode?page=${page}`,
     }),
   }),
 })
 
-export const { useGetAllEpisodesQuery, useGetMultipleEpisodesQuery } =
-  episodeApiSlice
+export const {
+  useGetAllEpisodesQuery,
+  useGetMultipleEpisodesQuery,
+  useLazyGetPaginatedEpisodesQuery,
+} = episodeApiSlice

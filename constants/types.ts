@@ -38,3 +38,7 @@ export type EpisodeResponse = {
   info: Info // Information about pagination
   results: Episode[] // Array of episodes
 }
+export type CharacterResponse = {
+  info: Info // Information about pagination
+  results: Character[] // Array of episodes
+}

@@ -1,3 +1,4 @@
+import { CharacterResponse } from '@/constants/types'
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 
 export const characterApiSlice = createApi({
@@ -5,14 +6,17 @@ export const characterApiSlice = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: 'https://rickandmortyapi.com/api/' }),
   //Read
   endpoints: (builder) => ({
-    GetAllCharacters: builder.query({
+    GetAllCharacters: builder.query<CharacterResponse, void>({
       query: () => 'character',
     }),
-    GetMultipleCharacters: builder.query({
+    GetMultipleCharacters: builder.query<CharacterResponse, void>({
       query: (episodes) => `episode/${episodes}`,
     }),
-    GetCharacter: builder.query({
+    GetCharacter: builder.query<CharacterResponse, number>({
       query: (id) => `character/${id}`,
+    }),
+    GetPaginatedCharacters: builder.query<CharacterResponse, number>({
+      query: (page: number) => `character?page=${page}`,
     }),
   }),
 })
@@ -21,4 +25,5 @@ export const {
   useGetAllCharactersQuery,
   useGetMultipleCharactersQuery,
   useGetCharacterQuery,
+  useLazyGetPaginatedCharactersQuery,
 } = characterApiSlice
