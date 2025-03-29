@@ -57,14 +57,26 @@ export default function Characters() {
         keyExtractor={(item) => item.id.toString()}
         style={styles.listContainer}
         renderItem={({ item }) => (
-          <Link
-            href={`/character/${item.id}`}
+          // <Link
+          //   href={`/character/${item.id}`}
+          //   style={[
+          //     styles.itemContainer,
+          //     { backgroundColor: themeColors[theme].backgroundColor },
+          //   ]}
+          // >
+          <View
             style={[
               styles.itemContainer,
               { backgroundColor: themeColors[theme].backgroundColor },
             ]}
           >
-            <Image source={{ uri: item.image }} style={styles.image} />
+            <View style={{ flex: 1, height: '100%' }}>
+              <Image
+                source={{ uri: item.image }}
+                style={styles.image}
+                resizeMode="cover"
+              />
+            </View>
 
             <View style={styles.textContainer}>
               <View
@@ -133,7 +145,8 @@ export default function Characters() {
                 color={item.status === 'Alive' ? 'green' : 'red'}
               />
             </View>
-          </Link>
+          </View>
+          // </Link>
         )}
       />
       {GetAllCharacters?.info && (
@@ -158,23 +171,26 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
   },
   itemContainer: {
-    flexDirection: 'row',
+    flexDirection: 'row', // قرار دادن آیتم‌ها کنار هم
+    alignItems: 'center', // تراز عمودی آیتم‌ها
+    justifyContent: 'flex-start', // شروع آیتم‌ها از سمت چپ
     padding: 8,
     borderRadius: 5,
-    height: 130,
+    height: 120,
     marginBottom: 10,
-    gap: 10,
+    backgroundColor: '#f9f9f9', // رنگ پس‌زمینه برای تست ظاهر
+    gap: 10, // فاصله بین آیتم‌ها
   },
   image: {
+    width: '100%',
+    marginRight: 10,
     height: '100%',
     borderRadius: 5,
-    flex: 2,
-    width: '40%',
   },
   textContainer: {
     display: 'flex',
     width: '50%',
-    flex: 3,
+    flex: 2,
   },
   text: {
     fontSize: 14,
