@@ -142,7 +142,7 @@ export default function Characters() {
         )}
       />
       {GetAllEpisodes?.info && (
-        <View>
+        <View style={styles.paginationStyle}>
           <Pagination
             info={GetAllEpisodes?.info as Info}
             getPaginatedEpisode={getPaginatedEpisodeHandler}
@@ -193,5 +193,8 @@ const styles = StyleSheet.create({
   episodeImage: {
     width: '100%',
     marginRight: 10,
+  },
+  paginationStyle: {
+    alignItems: 'center',
   },
 })

@@ -150,7 +150,7 @@ export default function Characters() {
         )}
       />
       {GetAllCharacters?.info && (
-        <View>
+        <View style={styles.paginationStyle}>
           <Pagination
             info={GetAllCharacters?.info as Info}
             getPaginatedEpisode={getPaginatedEpisodeHandler}
@@ -196,5 +196,8 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: 'bold',
     color: 'white',
+  },
+  paginationStyle: {
+    alignItems: 'center',
   },
 })
