@@ -5,6 +5,8 @@ import { useSelector } from 'react-redux'
 import { RootState } from '@/store'
 import { Link } from 'expo-router'
 import { useGetAllEpisodesQuery } from '@/services/episode'
+import Pagination from '@/components/Pagination'
+import { Info } from '@/constants/types'
 
 const themeColors = {
   light: {
@@ -112,7 +114,11 @@ export default function Characters() {
           // </Link>
         )}
       />
-      <View></View>
+      {GetAllEpisodes?.info && (
+        <View>
+          <Pagination info={GetAllEpisodes?.info as Info} />
+        </View>
+      )}
     </SafeAreaView>
   )
 }
