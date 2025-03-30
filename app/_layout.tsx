@@ -13,6 +13,7 @@ import { useColorScheme } from '@/hooks/useColorScheme'
 import { Provider } from 'react-redux'
 import { store } from '@/store'
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context'
+import CharacterDetail from './episode/[id]'
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync()

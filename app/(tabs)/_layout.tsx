@@ -45,6 +45,15 @@ export default function TabLayout() {
           ),
         }}
       />
+      <Tabs.Screen
+        name="episodes"
+        options={{
+          title: 'Episodes',
+          tabBarIcon: ({ color }) => (
+            <IconSymbol size={28} name="tv" color={color} />
+          ),
+        }}
+      />
     </Tabs>
   )
 }

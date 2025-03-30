@@ -1,9 +1,15 @@
 import { IconSymbol } from '@/components/ui/IconSymbol'
-import { View, Image, FlatList, Text, StyleSheet } from 'react-native'
+import {
+  View,
+  Image,
+  FlatList,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+} from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { useSelector } from 'react-redux'
 import { RootState } from '@/store'
-import { useNavigation } from '@react-navigation/native'
 import {
   useGetAllEpisodesQuery,
   useLazyGetPaginatedEpisodesQuery,
@@ -11,6 +17,7 @@ import {
 import Pagination from '@/components/Pagination'
 import { Episode, Info } from '@/constants/types'
 import { useState } from 'react'
+import { useRouter } from 'expo-router'
 
 const themeColors = {
   light: {
@@ -25,7 +32,7 @@ const themeColors = {
 
 export default function Characters() {
   const theme = useSelector((state: RootState) => state.theme.theme)
-  const navigation = useNavigation()
+  const router = useRouter()
 
   const [pageNumber, setPageNumber] = useState<number>(1)
   const [episodeList, setEpisodeList] = useState<Episode[] | null>(null)
@@ -52,6 +59,7 @@ export default function Characters() {
       console.log(error)
     }
   }
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <FlatList
@@ -59,11 +67,10 @@ export default function Characters() {
         keyExtractor={(item) => item.id.toString()}
         style={styles.listContainer}
         renderItem={({ item }) => (
-          // <Link
-          //   href={`/episode/${item.id}`}
-          //   style={{ display: 'flex', width: 'auto' }}
-          // >
-          <View
+          <TouchableOpacity
+            onPress={() => {
+              router.push(`/episode/${item.id}`)
+            }}
             style={[
               styles.itemContainer,
               { backgroundColor: themeColors[theme].backgroundColor },
@@ -137,8 +144,7 @@ export default function Characters() {
                 </Text>
               </View>
             </View>
-          </View>
-          // </Link>
+          </TouchableOpacity>
         )}
       />
       {GetAllEpisodes?.info && (

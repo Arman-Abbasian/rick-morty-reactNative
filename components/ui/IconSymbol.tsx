@@ -12,6 +12,7 @@ const MAPPING = {
   house: 'home',
   person: 'person',
   category: 'category',
+  tv: 'tv',
   transgender: 'transgender',
   circle: 'circle',
   'chevron.left.forwardslash.chevron.right': 'code',

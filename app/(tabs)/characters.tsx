@@ -3,11 +3,18 @@ import {
   useGetAllCharactersQuery,
   useLazyGetPaginatedCharactersQuery,
 } from '@/services/character'
-import { View, Image, FlatList, Text, StyleSheet } from 'react-native'
+import {
+  View,
+  Image,
+  FlatList,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+} from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { useSelector } from 'react-redux'
 import { RootState } from '@/store'
-import { Link } from 'expo-router'
+import { Link, useRouter } from 'expo-router'
 import Pagination from '@/components/Pagination'
 import { useState } from 'react'
 import { Character, Info } from '@/constants/types'
@@ -25,6 +32,7 @@ const themeColors = {
 
 export default function Characters() {
   const theme = useSelector((state: RootState) => state.theme.theme)
+  const router = useRouter()
 
   const [pageNumber, setPageNumber] = useState<number>(1)
   const [characterList, setCharacterList] = useState<Character[] | null>(null)
@@ -57,14 +65,10 @@ export default function Characters() {
         keyExtractor={(item) => item.id.toString()}
         style={styles.listContainer}
         renderItem={({ item }) => (
-          // <Link
-          //   href={`/character/${item.id}`}
-          //   style={[
-          //     styles.itemContainer,
-          //     { backgroundColor: themeColors[theme].backgroundColor },
-          //   ]}
-          // >
-          <View
+          <TouchableOpacity
+            onPress={() => {
+              router.push(`/episode/${item.id}`)
+            }}
             style={[
               styles.itemContainer,
               { backgroundColor: themeColors[theme].backgroundColor },
@@ -145,8 +149,7 @@ export default function Characters() {
                 color={item.status === 'Alive' ? 'green' : 'red'}
               />
             </View>
-          </View>
-          // </Link>
+          </TouchableOpacity>
         )}
       />
       {GetAllCharacters?.info && (
