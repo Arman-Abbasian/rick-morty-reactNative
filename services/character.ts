@@ -1,4 +1,4 @@
-import { CharacterResponse } from '@/constants/types'
+import { Character, CharacterResponse } from '@/constants/types'
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 
 export const characterApiSlice = createApi({
@@ -9,10 +9,10 @@ export const characterApiSlice = createApi({
     GetAllCharacters: builder.query<CharacterResponse, void>({
       query: () => 'character',
     }),
-    GetMultipleCharacters: builder.query<CharacterResponse, void>({
-      query: (episodes) => `episode/${episodes}`,
+    GetMultipleCharacters: builder.query<Character[], void>({
+      query: (episodes) => `character/${episodes}`,
     }),
-    GetCharacter: builder.query<CharacterResponse, number>({
+    GetCharacter: builder.query<Character, number>({
       query: (id) => `character/${id}`,
     }),
     GetPaginatedCharacters: builder.query<CharacterResponse, number>({

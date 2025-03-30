@@ -67,7 +67,7 @@ export default function Characters() {
         renderItem={({ item }) => (
           <TouchableOpacity
             onPress={() => {
-              router.push(`/episode/${item.id}`)
+              router.push(`/character/${item.id}`)
             }}
             style={[
               styles.itemContainer,

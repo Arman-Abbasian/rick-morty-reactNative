@@ -1,65 +1,77 @@
-import React, { useMemo } from 'react'
+import React, { useEffect, useMemo } from 'react'
 import { View, Text, StyleSheet, Image, ScrollView } from 'react-native'
 import { useLocalSearchParams } from 'expo-router'
-import { useGetCharacterQuery } from '@/services/character'
-import { useGetMultipleEpisodesQuery } from '@/services/episode'
+import { useGetEpisodeQuery } from '@/services/episode'
+import { useGetMultipleCharactersQuery } from '@/services/character'
+import { useNavigation } from '@react-navigation/native'
 
 export default function CharacterDetail() {
   const { id } = useLocalSearchParams()
+  const navigation = useNavigation()
 
   // Fetch character details
-  const { data: GetCharacter, isLoading } = useGetCharacterQuery(id)
+  const { data: GetEpisode, isLoading: GetEpisodeLoading } = useGetEpisodeQuery(
+    Number(id)
+  )
+  // تغییر عنوان صفحه بعد از دریافت داده
+  useEffect(() => {
+    if (GetEpisode?.name) {
+      navigation.setOptions({ title: `Episode: ${GetEpisode.episode}` }) // تنظیم عنوان صفحه
+    }
+  }, [GetEpisode, navigation])
 
   // Extract episode IDs using useMemo (prevents unnecessary re-renders)
-  const episodes = useMemo(() => {
+  const characters = useMemo(() => {
     return (
-      GetCharacter?.episode?.map((url: string) => url.split('/').pop()) || []
+      GetEpisode?.characters?.map((url: string) => url.split('/').pop()) || []
     )
-  }, [GetCharacter])
+  }, [GetEpisode])
 
   // Fetch multiple episodes only if episodes are available
   const {
-    data: GetMultipleEpisodes = [],
-    isLoading: GetMultipleEpisodesLoading,
-  } = useGetMultipleEpisodesQuery(episodes, {
-    skip: episodes.length === 0,
+    data: GetMultipleCharacters = [],
+    isLoading: GetMultipleCharactersLoading,
+  } = useGetMultipleCharactersQuery(characters, {
+    skip: characters.length === 0,
   })
-  const episodeList = () => {
-    if (Array.isArray(GetMultipleEpisodes)) return GetMultipleEpisodes
-    return [GetMultipleEpisodes]
+  const characterList = () => {
+    if (Array.isArray(GetMultipleCharacters)) return GetMultipleCharacters
+    return [GetMultipleCharacters]
   }
 
-  if (isLoading) return <Text>Loading...</Text>
+  if (GetEpisodeLoading) return <Text>Loading...</Text>
 
   return (
     <View style={styles.container}>
-      <Image source={{ uri: GetCharacter?.image }} style={styles.image} />
-      <Text style={styles.name}>{GetCharacter?.name}</Text>
+      <Image
+        source={require('../../assets/images/episode.png')}
+        style={styles.image}
+      />
+      <Text style={styles.name}>{GetEpisode?.episode}</Text>
       <Text style={styles.detail}>
-        Species:{' '}
-        <span style={{ fontWeight: 'bold' }}>{GetCharacter?.species}</span>
+        name: <span style={{ fontWeight: 'bold' }}>{GetEpisode?.name}</span>
       </Text>
       <Text style={styles.detail}>
-        Gender:{' '}
-        <span style={{ fontWeight: 'bold' }}>{GetCharacter?.gender}</span>
-      </Text>
-      <Text style={styles.detail}>
-        Status:{' '}
-        <span style={{ fontWeight: 'bold' }}>{GetCharacter?.status}</span>
+        air date:{' '}
+        <span style={{ fontWeight: 'bold' }}>{GetEpisode?.air_date}</span>
       </Text>
 
       {/* Episodes Section with Wrapping and Scrollable Container */}
-      {GetMultipleEpisodesLoading ? (
+      {GetMultipleCharactersLoading ? (
         <Text>Loading Episodes...</Text>
       ) : (
-        <View style={{ paddingTop: '30px' }}>
-          <Text style={{ textAlign: 'center' }}>
-            Episodes Featuring This Character
-          </Text>
+        <View style={{ paddingTop: 30, width: '100%' }}>
+          <Text style={{ textAlign: 'center' }}>Episode Characters</Text>
           <ScrollView contentContainerStyle={styles.episodesContainer}>
-            {episodeList().map((item, index) => (
+            {characterList().map((item, index) => (
               <View key={index} style={styles.episodeCard}>
-                <Text style={styles.episodeText}>{item.episode}</Text>
+                <Image
+                  source={{ uri: item.image }}
+                  style={styles.characterImage}
+                  resizeMode="cover"
+                />
+
+                <Text style={styles.episodeText}>{item.name}</Text>
               </View>
             ))}
           </ScrollView>
@@ -67,6 +79,9 @@ export default function CharacterDetail() {
       )}
     </View>
   )
+}
+export const meta = {
+  title: 'Episode Details', // تغییر عنوان صفحه
 }
 
 const styles = StyleSheet.create({
@@ -91,26 +106,25 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   episodesContainer: {
-    flexDirection: 'row', // Items arranged in row direction
-    flexWrap: 'wrap', // Allow wrapping of items
-    justifyContent: 'center', // Align items to start
     padding: 10,
     maxHeight: 300, // Define a fixed height for the container
+    width: '100%',
   },
   episodeCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 20,
     backgroundColor: '#f9f9f9',
     padding: 10,
     margin: 5,
-    borderRadius: 10,
-    borderWidth: 1,
-    borderColor: '#ddd',
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: 100, // Fixed width for each card
-    height: 50, // Fixed height for each card
   },
   episodeText: {
     fontSize: 14,
     textAlign: 'center',
+  },
+  characterImage: {
+    width: 50,
+    height: 50,
+    borderRadius: 25,
   },
 })

@@ -1,4 +1,4 @@
-import { EpisodeResponse } from '@/constants/types'
+import { Episode, EpisodeResponse } from '@/constants/types'
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 
 export const episodeApiSlice = createApi({
@@ -9,7 +9,10 @@ export const episodeApiSlice = createApi({
     GetAllEpisodes: builder.query<EpisodeResponse, void>({
       query: () => `episode`,
     }),
-    GetMultipleEpisodes: builder.query<EpisodeResponse, void>({
+    GetEpisode: builder.query<Episode, number>({
+      query: (id: number) => `episode/${id}`,
+    }),
+    GetMultipleEpisodes: builder.query<Episode[], void>({
       query: (episodes) => `episode/${episodes}`,
     }),
     GetPaginatedEpisodes: builder.query<EpisodeResponse, number>({
@@ -20,6 +23,7 @@ export const episodeApiSlice = createApi({
 
 export const {
   useGetAllEpisodesQuery,
+  useGetEpisodeQuery,
   useGetMultipleEpisodesQuery,
   useLazyGetPaginatedEpisodesQuery,
 } = episodeApiSlice

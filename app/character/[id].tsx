@@ -1,14 +1,15 @@
-import React, { useMemo } from 'react'
+import React, { useEffect, useMemo } from 'react'
 import { View, Text, StyleSheet, Image, ScrollView } from 'react-native'
 import { useLocalSearchParams } from 'expo-router'
 import { useGetCharacterQuery } from '@/services/character'
 import { useGetMultipleEpisodesQuery } from '@/services/episode'
+import { useNavigation } from '@react-navigation/native'
 
 export default function CharacterDetail() {
   const { id } = useLocalSearchParams()
-
+  const navigation = useNavigation()
   // Fetch character details
-  const { data: GetCharacter, isLoading } = useGetCharacterQuery(id)
+  const { data: GetCharacter, isLoading } = useGetCharacterQuery(Number(id))
 
   // Extract episode IDs using useMemo (prevents unnecessary re-renders)
   const episodes = useMemo(() => {
@@ -16,7 +17,12 @@ export default function CharacterDetail() {
       GetCharacter?.episode?.map((url: string) => url.split('/').pop()) || []
     )
   }, [GetCharacter])
-
+  // تغییر عنوان صفحه بعد از دریافت داده
+  useEffect(() => {
+    if (GetCharacter?.name) {
+      navigation.setOptions({ title: `Name: ${GetCharacter.name}` }) // تنظیم عنوان صفحه
+    }
+  }, [GetCharacter, navigation])
   // Fetch multiple episodes only if episodes are available
   const {
     data: GetMultipleEpisodes = [],
@@ -24,6 +30,7 @@ export default function CharacterDetail() {
   } = useGetMultipleEpisodesQuery(episodes, {
     skip: episodes.length === 0,
   })
+
   const episodeList = () => {
     if (Array.isArray(GetMultipleEpisodes)) return GetMultipleEpisodes
     return [GetMultipleEpisodes]
@@ -52,7 +59,7 @@ export default function CharacterDetail() {
       {GetMultipleEpisodesLoading ? (
         <Text>Loading Episodes...</Text>
       ) : (
-        <View style={{ paddingTop: '30px' }}>
+        <View style={{ paddingTop: 30 }}>
           <Text style={{ textAlign: 'center' }}>
             Episodes Featuring This Character
           </Text>
@@ -67,6 +74,11 @@ export default function CharacterDetail() {
       )}
     </View>
   )
+}
+export function generateMetadata({ params }: { params: { id: string } }) {
+  return {
+    title: `Episode ${params.id}`,
+  }
 }
 
 const styles = StyleSheet.create({
