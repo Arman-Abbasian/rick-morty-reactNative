@@ -113,7 +113,7 @@ export default function Characters() {
               >
                 <IconSymbol
                   size={20}
-                  name="category"
+                  name="folder"
                   color={themeColors[theme].textColor}
                 />
                 <Text
@@ -133,7 +133,7 @@ export default function Characters() {
               >
                 <IconSymbol
                   size={20}
-                  name="transgender"
+                  name="person"
                   color={themeColors[theme].textColor}
                 />
                 <Text

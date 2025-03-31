@@ -94,7 +94,7 @@ export default function Characters() {
               >
                 <IconSymbol
                   size={20}
-                  name="person"
+                  name="tv"
                   color={themeColors[theme].textColor}
                 />
                 <Text
@@ -114,7 +114,7 @@ export default function Characters() {
               >
                 <IconSymbol
                   size={20}
-                  name="category"
+                  name="person"
                   color={themeColors[theme].textColor}
                 />
                 <Text
@@ -134,7 +134,7 @@ export default function Characters() {
               >
                 <IconSymbol
                   size={20}
-                  name="transgender"
+                  name="calendar"
                   color={themeColors[theme].textColor}
                 />
                 <Text

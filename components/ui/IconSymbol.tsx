@@ -3,18 +3,19 @@
 import MaterialIcons from '@expo/vector-icons/MaterialIcons'
 import { SymbolWeight } from 'expo-symbols'
 import React from 'react'
-import { OpaqueColorValue, StyleProp, ViewStyle } from 'react-native'
+import { OpaqueColorValue, StyleProp, TextStyle, ViewStyle } from 'react-native'
 
 // Add your SFSymbol to MaterialIcons mappings here.
 const MAPPING = {
   // See MaterialIcons here: https://icons.expo.fyi
   // See SF Symbols in the SF Symbols app on Mac.
   house: 'home',
-  person: 'person',
-  category: 'category',
+  person: 'person-outline',
+  folder: 'folder-open',
   tv: 'tv',
-  transgender: 'transgender',
+  female: 'female',
   circle: 'circle',
+  calendar: 'calendar-month',
   'chevron.left.forwardslash.chevron.right': 'code',
   'chevron.right': 'chevron-right',
 } as Partial<
@@ -24,10 +25,10 @@ const MAPPING = {
   >
 >
 
-export type IconSymbolName = keyof typeof MAPPING
-
+export type IconSymbolName = keyof typeof MAPPING & string
 /**
- * An icon component that uses native SFSymbols on iOS, and MaterialIcons on Android and web. This ensures a consistent look across platforms, and optimal resource usage.
+ * An icon component that uses native SFSymbols on iOS, and MaterialIcons
+ * on Android and web. This ensures a consistent look across platforms, and optimal resource usage.
  *
  * Icon `name`s are based on SFSymbols and require manual mapping to MaterialIcons.
  */
@@ -40,7 +41,7 @@ export function IconSymbol({
   name: IconSymbolName
   size?: number
   color: string | OpaqueColorValue
-  style?: StyleProp<ViewStyle>
+  style?: StyleProp<TextStyle>
   weight?: SymbolWeight
 }) {
   return (
@@ -48,7 +49,7 @@ export function IconSymbol({
       color={color}
       size={size}
       name={MAPPING[name]}
-      style={style}
+      style={style as StyleProp<TextStyle>}
     />
   )
 }
