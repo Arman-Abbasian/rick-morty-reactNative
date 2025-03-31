@@ -11,6 +11,7 @@ import { useLocalSearchParams, useRouter } from 'expo-router'
 import { useGetEpisodeQuery } from '@/services/episode'
 import { useGetMultipleCharactersQuery } from '@/services/character'
 import { useNavigation } from '@react-navigation/native'
+import Spinner from '@/components/ui/Spinner'
 
 export default function CharacterDetail() {
   const { id } = useLocalSearchParams()
@@ -49,7 +50,7 @@ export default function CharacterDetail() {
     return [GetMultipleCharacters]
   }
 
-  if (GetEpisodeLoading) return <Text>Loading...</Text>
+  if (GetEpisodeLoading) return <Spinner color="blue" size="large" />
 
   return (
     <View style={styles.container}>
@@ -62,7 +63,7 @@ export default function CharacterDetail() {
       <Text style={styles.detail}>
         name: <Text style={{ fontWeight: 'bold' }}>{GetEpisode?.name}</Text>
       </Text>
-      <Text style={styles.detail}>
+      <Text style={[styles.detail, { marginBottom: 20 }]}>
         air date:{' '}
         <Text style={{ fontWeight: 'bold' }}>{GetEpisode?.air_date}</Text>
       </Text>
@@ -70,7 +71,7 @@ export default function CharacterDetail() {
       {/* بخش کاراکترها با ScrollView */}
       <View style={styles.flexContainer}>
         {GetMultipleCharactersLoading ? (
-          <Text>Loading Characters...</Text>
+          <Spinner color="blue" size="large" />
         ) : (
           <ScrollView contentContainerStyle={styles.characterContainer}>
             {characterList().map((item, index) => (
@@ -128,7 +129,6 @@ const styles = StyleSheet.create({
   },
   characterContainer: {
     flexGrow: 1,
-    padding: 10,
   },
   characterCard: {
     flexDirection: 'row',

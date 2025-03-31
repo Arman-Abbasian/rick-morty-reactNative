@@ -11,6 +11,7 @@ import { useLocalSearchParams, useRouter } from 'expo-router'
 import { useGetCharacterQuery } from '@/services/character'
 import { useGetMultipleEpisodesQuery } from '@/services/episode'
 import { useNavigation } from '@react-navigation/native'
+import Spinner from '@/components/ui/Spinner'
 
 export default function CharacterDetail() {
   const { id } = useLocalSearchParams()
@@ -48,7 +49,7 @@ export default function CharacterDetail() {
     return [GetMultipleEpisodes]
   }
 
-  if (isLoading) return <Text>Loading...</Text>
+  if (isLoading) return <Spinner color="blue" size="large" />
 
   return (
     <View style={styles.container}>
@@ -69,13 +70,16 @@ export default function CharacterDetail() {
 
       {/* Episodes Section with Wrapping and Scrollable Container */}
       {GetMultipleEpisodesLoading ? (
-        <Text>Loading Episodes...</Text>
+        <Spinner color="blue" size="large" />
       ) : (
-        <View style={{ paddingTop: 30 }}>
-          <Text style={{ textAlign: 'center' }}>
+        <View style={{ flex: 1, paddingTop: 30, width: '100%' }}>
+          <Text style={{ textAlign: 'center', marginBottom: 20 }}>
             Episodes Featuring This Character
           </Text>
-          <ScrollView contentContainerStyle={styles.episodesContainer}>
+          <ScrollView
+            style={{ flex: 1, width: '100%' }} // اضافه کردن flex: 1 برای پر کردن ارتفاع باقی‌مانده
+            contentContainerStyle={[styles.episodesContainer, { flexGrow: 1 }]}
+          >
             {episodeList().map((item, index) => (
               <TouchableOpacity
                 key={index}
@@ -124,8 +128,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row', // Items arranged in row direction
     flexWrap: 'wrap', // Allow wrapping of items
     justifyContent: 'center', // Align items to start
-    padding: 10,
-    maxHeight: 300, // Define a fixed height for the container
   },
   episodeCard: {
     backgroundColor: '#f9f9f9',
