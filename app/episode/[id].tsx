@@ -29,11 +29,11 @@ export default function CharacterDetail() {
     }
   }, [GetEpisode, navigation])
 
-  // استخراج character IDs
   const characters = useMemo(() => {
-    return (
-      GetEpisode?.characters?.map((url: string) => url.split('/').pop()) || []
-    )
+    return GetEpisode?.characters
+      ?.map((url: string) => url.split('/').pop())
+      .filter(Boolean) // حذف undefined‌ها
+      .join(',') // تبدیل آرایه به یک رشته با ','
   }, [GetEpisode])
 
   // دریافت اطلاعات کاراکترها
@@ -41,7 +41,7 @@ export default function CharacterDetail() {
     data: GetMultipleCharacters = [],
     isLoading: GetMultipleCharactersLoading,
   } = useGetMultipleCharactersQuery(characters, {
-    skip: characters.length === 0,
+    skip: !characters,
   })
 
   const characterList = () => {

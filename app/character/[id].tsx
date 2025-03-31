@@ -21,10 +21,14 @@ export default function CharacterDetail() {
 
   // Extract episode IDs using useMemo (prevents unnecessary re-renders)
   const episodes = useMemo(() => {
-    return (
-      GetCharacter?.episode?.map((url: string) => url.split('/').pop()) || []
-    )
+    const ids = GetCharacter?.episode
+      ?.map((url: string) => url.split('/').pop())
+      .filter(Boolean) // حذف `undefined`ها
+      .join(',') // تبدیل آرایه به رشته جداشده با `,`
+
+    return ids || undefined // اگر مقدار خالی بود، `undefined` برگردان
   }, [GetCharacter])
+
   // تغییر عنوان صفحه بعد از دریافت داده
   useEffect(() => {
     if (GetCharacter?.name) {
@@ -36,7 +40,7 @@ export default function CharacterDetail() {
     data: GetMultipleEpisodes = [],
     isLoading: GetMultipleEpisodesLoading,
   } = useGetMultipleEpisodesQuery(episodes, {
-    skip: episodes.length === 0,
+    skip: !episodes,
   })
 
   const episodeList = () => {

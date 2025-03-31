@@ -9,7 +9,7 @@ export const characterApiSlice = createApi({
     GetAllCharacters: builder.query<CharacterResponse, void>({
       query: () => 'character',
     }),
-    GetMultipleCharacters: builder.query<Character[], void>({
+    GetMultipleCharacters: builder.query<Character[], string | void>({
       query: (episodes) => `character/${episodes}`,
     }),
     GetCharacter: builder.query<Character, number>({

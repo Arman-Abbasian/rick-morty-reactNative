@@ -12,7 +12,7 @@ export const episodeApiSlice = createApi({
     GetEpisode: builder.query<Episode, number>({
       query: (id: number) => `episode/${id}`,
     }),
-    GetMultipleEpisodes: builder.query<Episode[], void>({
+    GetMultipleEpisodes: builder.query<Episode[], string | void>({
       query: (episodes) => `episode/${episodes}`,
     }),
     GetPaginatedEpisodes: builder.query<EpisodeResponse, number>({
