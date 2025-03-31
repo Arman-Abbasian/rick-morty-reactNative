@@ -1,6 +1,13 @@
 import React, { useEffect, useMemo } from 'react'
-import { View, Text, StyleSheet, Image, ScrollView } from 'react-native'
-import { useLocalSearchParams } from 'expo-router'
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  ScrollView,
+  TouchableOpacity,
+} from 'react-native'
+import { useLocalSearchParams, useRouter } from 'expo-router'
 import { useGetCharacterQuery } from '@/services/character'
 import { useGetMultipleEpisodesQuery } from '@/services/episode'
 import { useNavigation } from '@react-navigation/native'
@@ -8,6 +15,7 @@ import { useNavigation } from '@react-navigation/native'
 export default function CharacterDetail() {
   const { id } = useLocalSearchParams()
   const navigation = useNavigation()
+  const router = useRouter()
   // Fetch character details
   const { data: GetCharacter, isLoading } = useGetCharacterQuery(Number(id))
 
@@ -65,9 +73,15 @@ export default function CharacterDetail() {
           </Text>
           <ScrollView contentContainerStyle={styles.episodesContainer}>
             {episodeList().map((item, index) => (
-              <View key={index} style={styles.episodeCard}>
+              <TouchableOpacity
+                key={index}
+                onPress={() => {
+                  router.push(`/episode/${item.id}`)
+                }}
+                style={styles.episodeCard}
+              >
                 <Text style={styles.episodeText}>{item.episode}</Text>
-              </View>
+              </TouchableOpacity>
             ))}
           </ScrollView>
         </View>
