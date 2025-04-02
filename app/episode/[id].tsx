@@ -12,11 +12,14 @@ import { useGetEpisodeQuery } from '@/services/episode'
 import { useGetMultipleCharactersQuery } from '@/services/character'
 import { useNavigation } from '@react-navigation/native'
 import Spinner from '@/components/ui/Spinner'
+import useColorPalette from '@/hooks/useColorPalette'
 
 export default function CharacterDetail() {
   const { id } = useLocalSearchParams()
   const navigation = useNavigation()
   const router = useRouter()
+
+  const { backgroundColor, textColor, iconColor } = useColorPalette()
 
   // Fetch character details
   const { data: GetEpisode, isLoading: GetEpisodeLoading } = useGetEpisodeQuery(
@@ -50,28 +53,35 @@ export default function CharacterDetail() {
     return [GetMultipleCharacters]
   }
 
-  if (GetEpisodeLoading) return <Spinner color="blue" size="large" />
+  if (GetEpisodeLoading) return <Spinner size="large" />
 
   return (
     <View style={styles.container}>
       <Image
         source={require('../../assets/images/episode.png')}
-        style={styles.image}
+        style={[styles.image, { backgroundColor }]}
         resizeMode="contain"
       />
-      <Text style={styles.name}>{GetEpisode?.episode}</Text>
+      <Text style={[styles.name, { color: textColor }]}>
+        {GetEpisode?.episode}
+      </Text>
       <Text style={styles.detail}>
-        name: <Text style={{ fontWeight: 'bold' }}>{GetEpisode?.name}</Text>
+        name:{' '}
+        <Text style={{ fontWeight: 'bold', color: textColor }}>
+          {GetEpisode?.name}
+        </Text>
       </Text>
       <Text style={[styles.detail, { marginBottom: 20 }]}>
         air date:{' '}
-        <Text style={{ fontWeight: 'bold' }}>{GetEpisode?.air_date}</Text>
+        <Text style={{ fontWeight: 'bold', color: textColor }}>
+          {GetEpisode?.air_date}
+        </Text>
       </Text>
 
       {/* بخش کاراکترها با ScrollView */}
       <View style={styles.flexContainer}>
         {GetMultipleCharactersLoading ? (
-          <Spinner color="blue" size="large" />
+          <Spinner size="large" />
         ) : (
           <ScrollView contentContainerStyle={styles.characterContainer}>
             {characterList().map((item, index) => (
@@ -80,14 +90,16 @@ export default function CharacterDetail() {
                 onPress={() => {
                   router.push(`/character/${item.id}`)
                 }}
-                style={styles.characterCard}
+                style={[styles.characterCard, { backgroundColor }]}
               >
                 <Image
                   source={{ uri: item.image }}
                   style={styles.characterImage}
                   resizeMode="cover"
                 />
-                <Text style={styles.characterText}>{item.name}</Text>
+                <Text style={[styles.characterText, { color: textColor }]}>
+                  {item.name}
+                </Text>
               </TouchableOpacity>
             ))}
           </ScrollView>
@@ -112,7 +124,6 @@ const styles = StyleSheet.create({
     height: 200,
     borderRadius: 100,
     marginBottom: 20,
-    backgroundColor: 'white',
   },
   name: {
     fontSize: 24,
@@ -134,9 +145,17 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 20,
-    backgroundColor: '#f9f9f9',
     padding: 10,
-    margin: 5,
+    marginBottom: 10,
+    borderRadius: 5,
+    // Shadow for iOS
+    shadowColor: '#000', // Shadow color
+    shadowOffset: { width: 0, height: 2 }, // Shadow direction
+    shadowOpacity: 0.3, // Shadow opacity
+    shadowRadius: 4, // Shadow blur radius
+
+    // Shadow for Android
+    elevation: 5, // Elevation for Android
   },
   characterText: {
     fontSize: 14,

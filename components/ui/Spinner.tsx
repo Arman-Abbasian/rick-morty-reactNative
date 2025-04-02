@@ -1,10 +1,20 @@
+import useColorPalette from '@/hooks/useColorPalette'
 import React from 'react'
 import { View, ActivityIndicator, StyleSheet } from 'react-native'
 
-export default function Spinner({ size = 'large', color = '#3498db' }) {
+interface SpinnerProps {
+  size?: 'small' | 'large' // مشخص کردن فقط مقادیر مجاز برای سایز
+  color?: string
+}
+
+export default function Spinner({
+  size = 'large',
+  color = '#3498db',
+}: SpinnerProps) {
+  const { textColor } = useColorPalette()
   return (
     <View style={styles.container}>
-      <ActivityIndicator size={size} color={color} />
+      <ActivityIndicator size={size} color={textColor} />
     </View>
   )
 }

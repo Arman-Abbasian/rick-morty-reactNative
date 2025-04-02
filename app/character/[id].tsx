@@ -12,11 +12,13 @@ import { useGetCharacterQuery } from '@/services/character'
 import { useGetMultipleEpisodesQuery } from '@/services/episode'
 import { useNavigation } from '@react-navigation/native'
 import Spinner from '@/components/ui/Spinner'
+import useColorPalette from '@/hooks/useColorPalette'
 
 export default function CharacterDetail() {
   const { id } = useLocalSearchParams()
   const navigation = useNavigation()
   const router = useRouter()
+  const { backgroundColor, textColor } = useColorPalette()
   // Fetch character details
   const { data: GetCharacter, isLoading } = useGetCharacterQuery(Number(id))
 
@@ -49,31 +51,41 @@ export default function CharacterDetail() {
     return [GetMultipleEpisodes]
   }
 
-  if (isLoading) return <Spinner color="blue" size="large" />
+  if (isLoading) return <Spinner size="large" />
 
   return (
     <View style={styles.container}>
       <Image source={{ uri: GetCharacter?.image }} style={styles.image} />
-      <Text style={styles.name}>{GetCharacter?.name}</Text>
+      <Text style={[styles.name, { color: textColor }]}>
+        {GetCharacter?.name}
+      </Text>
       <Text style={styles.detail}>
         Species:{' '}
-        <span style={{ fontWeight: 'bold' }}>{GetCharacter?.species}</span>
+        <span style={{ fontWeight: 'bold', color: textColor }}>
+          {GetCharacter?.species}
+        </span>
       </Text>
       <Text style={styles.detail}>
         Gender:{' '}
-        <span style={{ fontWeight: 'bold' }}>{GetCharacter?.gender}</span>
+        <span style={{ fontWeight: 'bold', color: textColor }}>
+          {GetCharacter?.gender}
+        </span>
       </Text>
       <Text style={styles.detail}>
         Status:{' '}
-        <span style={{ fontWeight: 'bold' }}>{GetCharacter?.status}</span>
+        <span style={{ fontWeight: 'bold', color: textColor }}>
+          {GetCharacter?.status}
+        </span>
       </Text>
 
       {/* Episodes Section with Wrapping and Scrollable Container */}
       {GetMultipleEpisodesLoading ? (
-        <Spinner color="blue" size="large" />
+        <Spinner size="large" />
       ) : (
         <View style={{ flex: 1, paddingTop: 30, width: '100%' }}>
-          <Text style={{ textAlign: 'center', marginBottom: 20 }}>
+          <Text
+            style={{ textAlign: 'center', marginBottom: 20, color: textColor }}
+          >
             Episodes Featuring This Character
           </Text>
           <ScrollView
@@ -86,9 +98,11 @@ export default function CharacterDetail() {
                 onPress={() => {
                   router.push(`/episode/${item.id}`)
                 }}
-                style={styles.episodeCard}
+                style={[styles.episodeCard, { backgroundColor }]}
               >
-                <Text style={styles.episodeText}>{item.episode}</Text>
+                <Text style={[styles.episodeText, { color: textColor }]}>
+                  {item.episode}
+                </Text>
               </TouchableOpacity>
             ))}
           </ScrollView>
@@ -130,7 +144,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center', // Align items to start
   },
   episodeCard: {
-    backgroundColor: '#f9f9f9',
     padding: 10,
     margin: 5,
     borderRadius: 10,
@@ -140,6 +153,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: 100, // Fixed width for each card
     height: 50, // Fixed height for each card
+    // Shadow for iOS
+    shadowColor: '#000', // Shadow color
+    shadowOffset: { width: 0, height: 2 }, // Shadow direction
+    shadowOpacity: 0.3, // Shadow opacity
+    shadowRadius: 4, // Shadow blur radius
+    // Shadow for Android
+    elevation: 5, // Elevation for Android
   },
   episodeText: {
     fontSize: 14,
