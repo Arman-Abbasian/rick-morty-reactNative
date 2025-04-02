@@ -1,5 +1,12 @@
-import { View, StyleSheet, FlatList, TouchableOpacity } from 'react-native'
+import {
+  View,
+  StyleSheet,
+  FlatList,
+  TouchableOpacity,
+  Text,
+} from 'react-native'
 import { Info } from '@/constants/types'
+import useColorPalette from '@/hooks/useColorPalette'
 
 type PaginationProps = {
   info: Info
@@ -14,6 +21,7 @@ type PageNumberProps = {
 
 export default function Pagination(props: PaginationProps) {
   const { info, getPaginatedEpisode, pageNumber } = props
+  const { tintColor } = useColorPalette()
 
   return (
     <View style={styles.paginationContainer}>
@@ -39,15 +47,17 @@ export default function Pagination(props: PaginationProps) {
 
 function PageNumber(props: PageNumberProps) {
   const { number, getPaginatedEpisode, pageNumber } = props
+  const { tintColor, textColor } = useColorPalette()
   return (
     <TouchableOpacity
       style={[
-        styles.pageNumberContainer, // استایل پایه
-        number === pageNumber && { backgroundColor: 'cyan' }, // استایل شرطی
+        styles.pageNumberContainer,
+        { borderColor: textColor }, // استایل پایه
+        number === pageNumber && { backgroundColor: tintColor }, // استایل شرطی
       ]}
       onPress={() => getPaginatedEpisode(number)}
     >
-      {number}
+      <Text style={{ color: textColor }}>{number}</Text>
     </TouchableOpacity>
   )
 }
@@ -65,6 +75,6 @@ const styles = StyleSheet.create({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    marginHorizontal: 3,
+    marginHorizontal: 6,
   },
 })

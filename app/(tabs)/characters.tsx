@@ -16,17 +16,14 @@ import { useRouter } from 'expo-router'
 import Pagination from '@/components/Pagination'
 import { useState } from 'react'
 import { Character, Info } from '@/constants/types'
-import { useThemeColor } from '@/hooks/useThemeColor'
+import useColorPalette from '@/hooks/useColorPalette'
 
 export default function Characters() {
-  const backgroundColor = useThemeColor({}, 'background')
-  const textColor = useThemeColor({}, 'text')
-  const iconColor = useThemeColor({}, 'icon')
-  const successColor = useThemeColor({}, 'success')
-  const dangerColor = useThemeColor({}, 'danger')
+  const { backgroundColor, textColor, iconColor, successColor, dangerColor } =
+    useColorPalette()
 
   const router = useRouter()
-  console.log(backgroundColor, textColor)
+
   const [pageNumber, setPageNumber] = useState<number>(1)
   const [characterList, setCharacterList] = useState<Character[] | null>(null)
 
