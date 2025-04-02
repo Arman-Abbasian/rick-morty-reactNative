@@ -8,8 +8,6 @@ import {
   TouchableOpacity,
 } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { useSelector } from 'react-redux'
-import { RootState } from '@/store'
 import {
   useGetAllEpisodesQuery,
   useLazyGetPaginatedEpisodesQuery,
@@ -18,20 +16,11 @@ import Pagination from '@/components/Pagination'
 import { Episode, Info } from '@/constants/types'
 import { useState } from 'react'
 import { useRouter } from 'expo-router'
-
-const themeColors = {
-  light: {
-    backgroundColor: '#CBD5E1', // Light mode background color
-    textColor: '#334155', // Light mode text color
-  },
-  dark: {
-    backgroundColor: '#334155', // Dark mode background color
-    textColor: '#F1F5F9', // Dark mode text color
-  },
-}
+import useColorPalette from '@/hooks/useColorPalette'
 
 export default function Characters() {
-  const theme = useSelector((state: RootState) => state.theme.theme)
+  const { backgroundColor, textColor, iconColor, successColor, dangerColor } =
+    useColorPalette()
   const router = useRouter()
 
   const [pageNumber, setPageNumber] = useState<number>(1)
@@ -71,10 +60,7 @@ export default function Characters() {
             onPress={() => {
               router.push(`/episode/${item.id}`)
             }}
-            style={[
-              styles.itemContainer,
-              { backgroundColor: themeColors[theme].backgroundColor },
-            ]}
+            style={[styles.itemContainer, { backgroundColor: backgroundColor }]}
           >
             <View style={{ flex: 1 }}>
               <Image
@@ -92,14 +78,8 @@ export default function Characters() {
                   marginBottom: 8,
                 }}
               >
-                <IconSymbol
-                  size={20}
-                  name="tv"
-                  color={themeColors[theme].textColor}
-                />
-                <Text
-                  style={[styles.text, { color: themeColors[theme].textColor }]}
-                >
+                <IconSymbol size={20} name="tv" color={iconColor} />
+                <Text style={[styles.text, { color: textColor }]}>
                   {item.episode}
                 </Text>
               </View>
@@ -112,14 +92,8 @@ export default function Characters() {
                   marginBottom: 8,
                 }}
               >
-                <IconSymbol
-                  size={20}
-                  name="person"
-                  color={themeColors[theme].textColor}
-                />
-                <Text
-                  style={[styles.text, { color: themeColors[theme].textColor }]}
-                >
+                <IconSymbol size={20} name="person" color={iconColor} />
+                <Text style={[styles.text, { color: textColor }]}>
                   {item.name}
                 </Text>
               </View>
@@ -132,14 +106,8 @@ export default function Characters() {
                   marginBottom: 8,
                 }}
               >
-                <IconSymbol
-                  size={20}
-                  name="calendar"
-                  color={themeColors[theme].textColor}
-                />
-                <Text
-                  style={[styles.text, { color: themeColors[theme].textColor }]}
-                >
+                <IconSymbol size={20} name="calendar" color={iconColor} />
+                <Text style={[styles.text, { color: textColor }]}>
                   {item.air_date}
                 </Text>
               </View>
