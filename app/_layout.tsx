@@ -3,7 +3,7 @@ import {
   DefaultTheme,
   ThemeProvider,
 } from '@react-navigation/native'
-import { Platform, StyleSheet, StatusBar } from 'react-native'
+import { StyleSheet } from 'react-native'
 import { useFonts } from 'expo-font'
 import { Stack } from 'expo-router'
 import * as SplashScreen from 'expo-splash-screen'
@@ -13,7 +13,6 @@ import { useColorScheme } from '@/hooks/useColorScheme'
 import { Provider } from 'react-redux'
 import { store } from '@/store'
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context'
-import CharacterDetail from './episode/[id]'
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync()

@@ -12,28 +12,21 @@ import {
   TouchableOpacity,
 } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { useSelector } from 'react-redux'
-import { RootState } from '@/store'
-import { Link, useRouter } from 'expo-router'
+import { useRouter } from 'expo-router'
 import Pagination from '@/components/Pagination'
 import { useState } from 'react'
 import { Character, Info } from '@/constants/types'
-
-const themeColors = {
-  light: {
-    backgroundColor: '#CBD5E1', // Light mode background color
-    textColor: '#334155', // Light mode text color
-  },
-  dark: {
-    backgroundColor: '#334155', // Dark mode background color
-    textColor: '#F1F5F9', // Dark mode text color
-  },
-}
+import { useThemeColor } from '@/hooks/useThemeColor'
 
 export default function Characters() {
-  const theme = useSelector((state: RootState) => state.theme.theme)
-  const router = useRouter()
+  const backgroundColor = useThemeColor({}, 'background')
+  const textColor = useThemeColor({}, 'text')
+  const iconColor = useThemeColor({}, 'icon')
+  const successColor = useThemeColor({}, 'success')
+  const dangerColor = useThemeColor({}, 'danger')
 
+  const router = useRouter()
+  console.log(backgroundColor, textColor)
   const [pageNumber, setPageNumber] = useState<number>(1)
   const [characterList, setCharacterList] = useState<Character[] | null>(null)
 
@@ -46,6 +39,7 @@ export default function Characters() {
       isLoading: LazyGetPaginatedCharactersLoading,
     },
   ] = useLazyGetPaginatedCharactersQuery()
+
   const getPaginatedEpisodeHandler = async (number: number) => {
     try {
       const newUrl = new URL(window.location.href)
@@ -69,10 +63,7 @@ export default function Characters() {
             onPress={() => {
               router.push(`/character/${item.id}`)
             }}
-            style={[
-              styles.itemContainer,
-              { backgroundColor: themeColors[theme].backgroundColor },
-            ]}
+            style={[styles.itemContainer, { backgroundColor }]}
           >
             <View style={{ flex: 1, height: '100%' }}>
               <Image
@@ -91,14 +82,8 @@ export default function Characters() {
                   marginBottom: 8,
                 }}
               >
-                <IconSymbol
-                  size={20}
-                  name="person"
-                  color={themeColors[theme].textColor}
-                />
-                <Text
-                  style={[styles.text, { color: themeColors[theme].textColor }]}
-                >
+                <IconSymbol size={20} name="person" color={iconColor} />
+                <Text style={[styles.text, { color: textColor }]}>
                   {item.name}
                 </Text>
               </View>
@@ -111,14 +96,8 @@ export default function Characters() {
                   marginBottom: 8,
                 }}
               >
-                <IconSymbol
-                  size={20}
-                  name="folder"
-                  color={themeColors[theme].textColor}
-                />
-                <Text
-                  style={[styles.text, { color: themeColors[theme].textColor }]}
-                >
+                <IconSymbol size={20} name="folder" color={iconColor} />
+                <Text style={[styles.text, { color: textColor }]}>
                   {item.species}
                 </Text>
               </View>
@@ -131,22 +110,16 @@ export default function Characters() {
                   marginBottom: 8,
                 }}
               >
-                <IconSymbol
-                  size={20}
-                  name="person"
-                  color={themeColors[theme].textColor}
-                />
-                <Text
-                  style={[styles.text, { color: themeColors[theme].textColor }]}
-                >
+                <IconSymbol size={20} name="person" color={iconColor} />
+                <Text style={[styles.text, { color: textColor }]}>
                   {item.gender}
                 </Text>
               </View>
 
               <IconSymbol
-                size={20}
+                size={15}
                 name="circle"
-                color={item.status === 'Alive' ? 'green' : 'red'}
+                color={item.status === 'Alive' ? successColor : dangerColor}
               />
             </View>
           </TouchableOpacity>
@@ -198,7 +171,6 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 14,
     fontWeight: 'bold',
-    color: 'white',
   },
   paginationStyle: {
     alignItems: 'center',
