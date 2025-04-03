@@ -62,21 +62,23 @@ export default function CharacterDetail() {
         style={[styles.image, { backgroundColor }]}
         resizeMode="contain"
       />
-      <Text style={[styles.name, { color: textColor }]}>
-        {GetEpisode?.episode}
-      </Text>
-      <Text style={styles.detail}>
-        name:{' '}
-        <Text style={{ fontWeight: 'bold', color: textColor }}>
-          {GetEpisode?.name}
+      <View style={styles.textContainer}>
+        <Text style={[styles.name, { color: textColor }]}>
+          {GetEpisode?.episode}
         </Text>
-      </Text>
-      <Text style={[styles.detail, { marginBottom: 20 }]}>
-        air date:{' '}
-        <Text style={{ fontWeight: 'bold', color: textColor }}>
-          {GetEpisode?.air_date}
+        <Text style={[styles.detail, { color: textColor }]}>
+          name:{' '}
+          <Text style={{ fontWeight: 'bold', color: textColor }}>
+            {GetEpisode?.name}
+          </Text>
         </Text>
-      </Text>
+        <Text style={[styles.detail, { marginBottom: 20, color: textColor }]}>
+          air date:{' '}
+          <Text style={{ fontWeight: 'bold', color: textColor }}>
+            {GetEpisode?.air_date}
+          </Text>
+        </Text>
+      </View>
 
       {/* بخش کاراکترها با ScrollView */}
       <View style={styles.flexContainer}>
@@ -124,6 +126,10 @@ const styles = StyleSheet.create({
     height: 200,
     borderRadius: 100,
     marginBottom: 20,
+  },
+  textContainer: {
+    width: '100%',
+    alignItems: 'center',
   },
   name: {
     fontSize: 24,

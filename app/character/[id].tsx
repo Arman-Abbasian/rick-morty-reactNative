@@ -59,55 +59,64 @@ export default function CharacterDetail() {
       <Text style={[styles.name, { color: textColor }]}>
         {GetCharacter?.name}
       </Text>
-      <Text style={styles.detail}>
+      <Text style={[styles.detail, { color: textColor }]}>
         Species:{' '}
-        <span style={{ fontWeight: 'bold', color: textColor }}>
+        <Text style={{ fontWeight: 'bold', color: textColor }}>
           {GetCharacter?.species}
-        </span>
+        </Text>
       </Text>
-      <Text style={styles.detail}>
+      <Text style={[styles.detail, { color: textColor }]}>
         Gender:{' '}
-        <span style={{ fontWeight: 'bold', color: textColor }}>
+        <Text style={{ fontWeight: 'bold', color: textColor }}>
           {GetCharacter?.gender}
-        </span>
+        </Text>
       </Text>
-      <Text style={styles.detail}>
+      <Text style={[styles.detail, { color: textColor }]}>
         Status:{' '}
-        <span style={{ fontWeight: 'bold', color: textColor }}>
+        <Text style={{ fontWeight: 'bold', color: textColor }}>
           {GetCharacter?.status}
-        </span>
+        </Text>
       </Text>
 
       {/* Episodes Section with Wrapping and Scrollable Container */}
-      {GetMultipleEpisodesLoading ? (
-        <Spinner size="large" />
-      ) : (
-        <View style={{ flex: 1, paddingTop: 30, width: '100%' }}>
-          <Text
-            style={{ textAlign: 'center', marginBottom: 20, color: textColor }}
-          >
-            Episodes Featuring This Character
-          </Text>
-          <ScrollView
-            style={{ flex: 1, width: '100%' }} // اضافه کردن flex: 1 برای پر کردن ارتفاع باقی‌مانده
-            contentContainerStyle={[styles.episodesContainer, { flexGrow: 1 }]}
-          >
-            {episodeList().map((item, index) => (
-              <TouchableOpacity
-                key={index}
-                onPress={() => {
-                  router.push(`/episode/${item.id}`)
-                }}
-                style={[styles.episodeCard, { backgroundColor }]}
-              >
-                <Text style={[styles.episodeText, { color: textColor }]}>
-                  {item.episode}
-                </Text>
-              </TouchableOpacity>
-            ))}
-          </ScrollView>
-        </View>
-      )}
+      <View style={{ flex: 1, paddingTop: 30, width: '100%' }}>
+        {GetMultipleEpisodesLoading ? (
+          <Spinner size="large" />
+        ) : (
+          <View style={{ flex: 1, paddingTop: 30, width: '100%' }}>
+            <Text
+              style={{
+                textAlign: 'center',
+                marginBottom: 20,
+                color: textColor,
+              }}
+            >
+              Episodes Featuring This Character
+            </Text>
+            <ScrollView
+              style={{ flex: 1, width: '100%' }} // اضافه کردن flex: 1 برای پر کردن ارتفاع باقی‌مانده
+              contentContainerStyle={[
+                styles.episodesContainer,
+                { flexGrow: 1 },
+              ]}
+            >
+              {episodeList().map((item, index) => (
+                <TouchableOpacity
+                  key={index}
+                  onPress={() => {
+                    router.push(`/episode/${item.id}`)
+                  }}
+                  style={[styles.episodeCard, { backgroundColor }]}
+                >
+                  <Text style={[styles.episodeText, { color: textColor }]}>
+                    {item.episode}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+            </ScrollView>
+          </View>
+        )}
+      </View>
     </View>
   )
 }
