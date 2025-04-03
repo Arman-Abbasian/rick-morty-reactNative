@@ -14,9 +14,10 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { useRouter } from 'expo-router'
 import Pagination from '@/components/Pagination'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Character, Info } from '@/constants/types'
 import useColorPalette from '@/hooks/useColorPalette'
+import Spinner from '@/components/ui/Spinner'
 
 export default function Characters() {
   const { backgroundColor, textColor, iconColor, successColor, dangerColor } =
@@ -29,6 +30,7 @@ export default function Characters() {
 
   const { data: GetAllCharacters, isLoading: GetAllCharactersLoading } =
     useGetAllCharactersQuery()
+
   const [
     LazyGetPaginatedCharactersTrigger,
     {
@@ -39,89 +41,101 @@ export default function Characters() {
 
   const getPaginatedEpisodeHandler = async (number: number) => {
     try {
-      const newUrl = new URL(window.location.href)
-      newUrl.searchParams.set('page', number.toString())
-      window.history.pushState({}, '', newUrl.toString())
       setPageNumber(number)
-      const data = await LazyGetPaginatedCharactersTrigger(number)
-      setCharacterList(data?.data?.results as Character[])
+      const data = await LazyGetPaginatedCharactersTrigger(number).unwrap()
+      setCharacterList(data?.results as Character[])
     } catch (error) {
       console.log(error)
     }
   }
   return (
     <SafeAreaView style={styles.safeArea}>
-      <FlatList
-        data={characterList ? characterList : GetAllCharacters?.results}
-        keyExtractor={(item) => item.id.toString()}
-        style={styles.listContainer}
-        renderItem={({ item }) => (
-          <TouchableOpacity
-            onPress={() => {
-              router.push(`/character/${item.id}`)
-            }}
-            style={[styles.itemContainer, { backgroundColor }]}
-          >
-            <View style={{ flex: 1, height: '100%' }}>
-              <Image
-                source={{ uri: item.image }}
-                style={styles.image}
-                resizeMode="cover"
-              />
-            </View>
-
-            <View style={styles.textContainer}>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  gap: 3,
-                  marginBottom: 8,
+      {GetAllCharactersLoading ? (
+        <Spinner size="large" />
+      ) : (
+        <FlatList
+          data={
+            characterList?.length
+              ? characterList
+              : GetAllCharacters?.results || []
+          }
+          keyExtractor={(item) => String(item.id)}
+          style={styles.listContainer}
+          nestedScrollEnabled={true}
+          ListEmptyComponent={
+            <Text style={{ color: 'red' }}>No Data Found</Text>
+          }
+          renderItem={({ item }) => {
+            console.log('Rendering item:', item)
+            return (
+              <TouchableOpacity
+                onPress={() => {
+                  router.push(`/character/${item.id}`)
                 }}
+                style={[styles.itemContainer, { backgroundColor }]}
               >
-                <IconSymbol size={20} name="person" color={iconColor} />
-                <Text style={[styles.text, { color: textColor }]}>
-                  {item.name}
-                </Text>
-              </View>
+                <View style={{ flex: 1, height: '100%' }}>
+                  <Image
+                    source={{ uri: item.image }}
+                    style={styles.image}
+                    resizeMode="cover"
+                  />
+                </View>
 
-              <View
-                style={{
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  gap: 3,
-                  marginBottom: 8,
-                }}
-              >
-                <IconSymbol size={20} name="folder" color={iconColor} />
-                <Text style={[styles.text, { color: textColor }]}>
-                  {item.species}
-                </Text>
-              </View>
+                <View style={styles.textContainer}>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      gap: 3,
+                      marginBottom: 8,
+                    }}
+                  >
+                    <IconSymbol size={20} name="person" color={iconColor} />
+                    <Text style={[styles.text, { color: textColor }]}>
+                      {item.name}
+                    </Text>
+                  </View>
 
-              <View
-                style={{
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  gap: 3,
-                  marginBottom: 8,
-                }}
-              >
-                <IconSymbol size={20} name="person" color={iconColor} />
-                <Text style={[styles.text, { color: textColor }]}>
-                  {item.gender}
-                </Text>
-              </View>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      gap: 3,
+                      marginBottom: 8,
+                    }}
+                  >
+                    <IconSymbol size={20} name="folder" color={iconColor} />
+                    <Text style={[styles.text, { color: textColor }]}>
+                      {item.species}
+                    </Text>
+                  </View>
 
-              <IconSymbol
-                size={15}
-                name="circle"
-                color={item.status === 'Alive' ? successColor : dangerColor}
-              />
-            </View>
-          </TouchableOpacity>
-        )}
-      />
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      gap: 3,
+                      marginBottom: 8,
+                    }}
+                  >
+                    <IconSymbol size={20} name="person" color={iconColor} />
+                    <Text style={[styles.text, { color: textColor }]}>
+                      {item.gender}
+                    </Text>
+                  </View>
+
+                  <IconSymbol
+                    size={15}
+                    name="circle"
+                    color={item.status === 'Alive' ? successColor : dangerColor}
+                  />
+                </View>
+              </TouchableOpacity>
+            )
+          }}
+        />
+      )}
       {GetAllCharacters?.info && (
         <View style={styles.paginationStyle}>
           <Pagination

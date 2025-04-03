@@ -38,9 +38,6 @@ export default function Characters() {
 
   const getPaginatedEpisodeHandler = async (number: number) => {
     try {
-      const newUrl = new URL(window.location.href)
-      newUrl.searchParams.set('page', number.toString())
-      window.history.pushState({}, '', newUrl.toString())
       setPageNumber(number)
       const data = await LazyGetPaginatedEpisodesTrigger(number)
       setEpisodeList(data?.data?.results as Episode[])

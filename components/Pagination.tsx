@@ -66,6 +66,7 @@ const styles = StyleSheet.create({
   paginationContainer: {
     marginTop: 5,
     marginBottom: 5,
+    height: 40,
   },
   pageNumberContainer: {
     width: 30,
